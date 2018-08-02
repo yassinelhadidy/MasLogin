@@ -1,8 +1,5 @@
-package com.masary.yassin.masarypaymentapp.infrastructure.infrastructure.infrastructure
+package com.masary.yassin.masarypaymentapp.infrastructure
 
-import com.masary.yassin.masarypaymentapp.infrastructure.InfrastructureException
-import com.masary.yassin.masarypaymentapp.infrastructure.MasCustomerInfoRepository
-import com.masary.yassin.masarypaymentapp.infrastructure.MasaryRestService
 import com.masary.yassin.masarypaymentapp.infrastructure.dto.MasCustInfo.Companion.toMasCustInfo
 import com.masary.yassin.masarypaymentapp.infrastructure.dto.MasCustLoginResponse
 import com.masary.yassin.masarypaymentapp.models.CustomerInfo
