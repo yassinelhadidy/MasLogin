@@ -1,4 +1,4 @@
-package com.masary.yassin.masarypaymentapp.infrastructure.ui.loginfeature
+package com.masary.yassin.masarypaymentapp.ui.loginfeature
 
 import android.app.Activity
 import android.support.test.espresso.Espresso.closeSoftKeyboard

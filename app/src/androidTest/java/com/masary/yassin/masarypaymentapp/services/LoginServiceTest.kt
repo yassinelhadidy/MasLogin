@@ -1,6 +1,6 @@
-package com.masary.yassin.masarypaymentapp.infrastructure.models.services
+package com.masary.yassin.masarypaymentapp.services
 
-import com.masary.yassin.masarypaymentapp.infrastructure.MOCK_BASE_URL
+import com.masary.yassin.masarypaymentapp.MOCK_BASE_URL
 import com.masary.yassin.masarypaymentapp.infrastructure.MasCustomerInfoRepository
 import com.masary.yassin.masarypaymentapp.infrastructure.MasaryRestServiceFactory
 import com.masary.yassin.masarypaymentapp.models.CustomerInfo

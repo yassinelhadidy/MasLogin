@@ -1,4 +1,4 @@
-package com.masary.yassin.masarypaymentapp.infrastructure.infrastructure.models.services
+package com.masary.yassin.masarypaymentapp.services
 
 import com.masary.yassin.masarypaymentapp.infrastructure.MasCustomerInfoRepository
 import com.masary.yassin.masarypaymentapp.models.CustomerInfo

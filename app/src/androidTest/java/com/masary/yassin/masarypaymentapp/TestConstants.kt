@@ -1,4 +1,4 @@
-package com.masary.yassin.masarypaymentapp.infrastructure
+package com.masary.yassin.masarypaymentapp
 
 /**
  * Created by yassin on 7/29/18.

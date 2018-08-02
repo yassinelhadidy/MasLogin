@@ -1,4 +1,4 @@
-package com.masary.yassin.masarypaymentapp.infrastructure.ui.utilites
+package com.masary.yassin.masarypaymentapp.ui.utilites
 
 import android.view.View
 import android.widget.EditText

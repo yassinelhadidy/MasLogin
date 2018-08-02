@@ -1,6 +1,9 @@
-package com.masary.yassin.masarypaymentapp.infrastructure.infrastructure
+package com.masary.yassin.masarypaymentapp.infrastructure
 
-import com.masary.yassin.masarypaymentapp.infrastructure.*
+import com.masary.yassin.masarypaymentapp.MOCK_BASE_URL
+import com.masary.yassin.masarypaymentapp.PASS
+import com.masary.yassin.masarypaymentapp.USER_NAME
+import com.masary.yassin.masarypaymentapp.USER_NAME_FAULT
 import com.masary.yassin.masarypaymentapp.models.CustomerInfo
 import com.masary.yassin.masarypaymentapp.models.User
 import io.reactivex.Notification
