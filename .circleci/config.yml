@@ -1,7 +1,4 @@
 version: 2
-machine:
-  environment:
-    ANDROID_HOME: /home/yassin/Android/Sdk
 jobs:
   build:
     working_directory: ~/code
@@ -23,7 +20,7 @@ jobs:
 #                  ./gradlew androidDependencies
       - run:
           name: Download Dependencies
-          command: ./gradlew androidDependencies --no-daemon
+          command: ANDROID_HOME: /home/yassin/Android/Sdk ./gradlew androidDependencies --no-daemon
       - save_cache:
           paths:
             - ~/.gradle
