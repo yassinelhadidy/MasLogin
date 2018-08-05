@@ -20,7 +20,9 @@ jobs:
 #                  ./gradlew androidDependencies
       - run:
           name: Download Dependencies
-          command: ANDROID_HOME: /home/yassin/Android/Sdk ./gradlew androidDependencies --no-daemon
+          command: ./gradlew androidDependencies --no-daemon
+          environment:
+            ANDROID_HOME: /home/yassin/Android/Sdk 
       - save_cache:
           paths:
             - ~/.gradle
