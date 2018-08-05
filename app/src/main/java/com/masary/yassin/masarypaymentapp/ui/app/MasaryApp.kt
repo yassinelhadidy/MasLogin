@@ -1,6 +1,9 @@
 package com.masary.yassin.masarypaymentapp.ui.app
 
 import android.app.Application
+import android.content.Context
+import com.masary.yassin.masarypaymentapp.BuildConfig
+import com.masary.yassin.masarypaymentapp.infrastructure.ConfigurationRepository
 import com.masary.yassin.masarypaymentapp.infrastructure.MasaryRestService
 import com.masary.yassin.masarypaymentapp.infrastructure.MasaryRestServiceFactory
 
@@ -8,17 +11,20 @@ import com.masary.yassin.masarypaymentapp.infrastructure.MasaryRestServiceFactor
  *Created by yassin on 7/29/18.
  * we need make some instance as singleton over application.
  */
-private const val IP_ADD = "172.16.10.180"
-private const val BASE_URL = "http://$IP_ADD/Mobile-WS-Client/"
 
 class MasaryApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
         getServiceInstance()
+        getConfigRepoInstance()
     }
 
     fun getServiceInstance(): MasaryRestService {
-        return MasaryRestServiceFactory(BASE_URL).service
+        return MasaryRestServiceFactory(BuildConfig.BASE_URL).service
+    }
+
+    fun getConfigRepoInstance(): ConfigurationRepository {
+        return ConfigurationRepository(getSharedPreferences(BuildConfig.KEY_PREFERENCE, Context.MODE_PRIVATE))
     }
 }

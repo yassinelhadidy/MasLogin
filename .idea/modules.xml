@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/OSProjects.iml" filepath="$PROJECT_DIR$/OSProjects.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sweet-alert-dialog-master/library/library.iml" filepath="$PROJECT_DIR$/sweet-alert-dialog-master/library/library.iml" />
     </modules>
   </component>
 </project>

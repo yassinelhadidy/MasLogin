@@ -1,7 +1,8 @@
-package com.masary.yassin.masarypaymentapp.services
+package com.masary.yassin.masarypaymentapp.model.services
 
 import com.masary.yassin.masarypaymentapp.infrastructure.MasCustomerInfoRepository
 import com.masary.yassin.masarypaymentapp.models.CustomerInfo
+import com.masary.yassin.masarypaymentapp.models.ModelException
 import com.masary.yassin.masarypaymentapp.models.User
 import com.masary.yassin.masarypaymentapp.models.exception.UnauthorizedException
 import com.masary.yassin.masarypaymentapp.models.services.LoginService
@@ -14,6 +15,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
 import retrofit2.HttpException
@@ -39,23 +41,24 @@ class LoginServiceUnitTest(private val setupTestParameter: SetupTestParameter<*>
 
                 val mockMasCustomerInfoRepository = Mockito.mock(MasCustomerInfoRepository::class.java)
 
-                val login = LoginService(mockMasCustomerInfoRepository)
 
                 val validUserMap = hashMapOf(
-                        User("مايكل يعقوب", "87", "123456789", "mobiwire") to customerInfo
+                        User("", "8", "123456789", "mobiwire") to customerInfo
                 )
 
                 val inValidUserMap = hashMapOf(
-                        User("مينا", "885", "123456789", "android") to UnauthorizedException("Invalid User ID or Password"),
-                        User("مينا", "88", "123456789", "android") to UnauthorizedException("In-Active Customer")
+                        User("", "885", "123456789", "android") to UnauthorizedException("Invalid User ID or Password"),
+                        User("", "88", "123456789", "android") to UnauthorizedException("In-Active Customer")
                 )
 
                 return object : TestParameter<CustomerInfo> {
                     override fun getCorrectUsers(): Set<User> = validUserMap.keys
 
                     override fun successfulLogin(user: User): Triple<Observable<out CustomerInfo>, User, CustomerInfo?> {
-                        Mockito.`when`(mockMasCustomerInfoRepository.insert(user))
+                         `when`(mockMasCustomerInfoRepository.insert(user))
                                 .thenReturn(Observable.just(customerInfo))
+                        val login = LoginService(mockMasCustomerInfoRepository)
+
 
                         val observable = login.login(user.username!!, user.password!!, user.deviceType)
                         return Triple(observable, user, validUserMap[user])
@@ -69,6 +72,7 @@ class LoginServiceUnitTest(private val setupTestParameter: SetupTestParameter<*>
 
                         Mockito.`when`(mockMasCustomerInfoRepository.insert(user))
                                 .thenReturn(Observable.error(HttpException(errorResponse)))
+                        val login = LoginService(mockMasCustomerInfoRepository)
 
                         val observable = login.login(user.username!!, user.password!!, user.deviceType)
                         return Triple(observable, user, inValidUserMap[user])
@@ -84,7 +88,7 @@ class LoginServiceUnitTest(private val setupTestParameter: SetupTestParameter<*>
     @Test
     fun successfulLogin() {
         val testParameter = setupTestParameter.setup()
-        val testObserver = TestObserver<Triple<Any?, Any?, Any?>>()
+        val testObserver = TestObserver<Triple<Any?, Any, Any?>>()
         Observable.fromIterable(testParameter.getCorrectUsers()
                 .map {
                     val triple = testParameter.successfulLogin(it)
@@ -105,7 +109,7 @@ class LoginServiceUnitTest(private val setupTestParameter: SetupTestParameter<*>
     @Test
     fun loginUnauthorizedUser() {
         val testParameter = setupTestParameter.setup()
-        val testObserver = TestObserver<Triple<Notification<out Any?>, User, Throwable?>>()
+        val testObserver = TestObserver<Triple<Notification<out Any?>, User?, Throwable?>>()
         Observable.fromIterable(testParameter.getInCorrectUsers()
                 .map {
                     val triple = testParameter.loginUnauthorizedUser(it)
@@ -121,7 +125,7 @@ class LoginServiceUnitTest(private val setupTestParameter: SetupTestParameter<*>
                 .assertComplete()
         testObserver.values().forEach {
             Assert.assertTrue(it.second.toString(), it.first.isOnError)
-            Assert.assertTrue(it.second.toString(), it.first.error is UnauthorizedException)
+            Assert.assertTrue(it.second.toString(), it.first.error is ModelException)
 //            Assert.assertEquals(it.second.toString(),
 //                    it.third?.message, it.first.error?.cause?.message)  //FIXME : initiate throwable object
         }
@@ -129,7 +133,7 @@ class LoginServiceUnitTest(private val setupTestParameter: SetupTestParameter<*>
 
     interface TestParameter<out T> {
         fun getCorrectUsers(): Set<User>
-        fun successfulLogin(user: User): Triple<Observable<out T>, User, CustomerInfo?>
+        fun successfulLogin(user: User): Triple<Observable<out T>, User, T?>
         fun getInCorrectUsers(): Set<User>
         fun loginUnauthorizedUser(user: User): Triple<Observable<out T>, User, Throwable?>
     }

@@ -1,8 +1,13 @@
-package com.masary.yassin.masarypaymentapp.services
+package com.masary.yassin.masarypaymentapp.model.services
 
-import com.masary.yassin.masarypaymentapp.MOCK_BASE_URL
+import android.content.Context
+import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.masary.yassin.masarypaymentapp.BuildConfig
+import com.masary.yassin.masarypaymentapp.infrastructure.ConfigurationRepository
 import com.masary.yassin.masarypaymentapp.infrastructure.MasCustomerInfoRepository
 import com.masary.yassin.masarypaymentapp.infrastructure.MasaryRestServiceFactory
+import com.masary.yassin.masarypaymentapp.models.Configuration
 import com.masary.yassin.masarypaymentapp.models.CustomerInfo
 import com.masary.yassin.masarypaymentapp.models.ModelException
 import com.masary.yassin.masarypaymentapp.models.User
@@ -16,6 +21,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
+import org.robolectric.RuntimeEnvironment
 import java.util.concurrent.TimeUnit
 
 /**
@@ -29,9 +35,17 @@ class LoginServiceTest(private val setupTestParameter: SetupTestParameter<*>) {
         fun data(): List<Array<*>> = listOf(
                 arrayOf(object : SetupTestParameter<CustomerInfo> {
                     override fun setup(): TestParameter<CustomerInfo> {
-                        val customerInfoRepository = MasCustomerInfoRepository(MasaryRestServiceFactory(MOCK_BASE_URL).service)
+                        val sharedPreference: SharedPreferences = RuntimeEnvironment.application.getSharedPreferences(BuildConfig.KEY_PREFERENCE, Context.MODE_PRIVATE)
+
+                        val config = Configuration("", "58240051111110", "Android%2D%2D89014103211118510720", "Mobiwire")
+                        val jsonString = Gson().toJson(config)
+                        sharedPreference.edit().clear().apply()
+                        sharedPreference.edit().putString(BuildConfig.KEY_CONFIG, jsonString).apply()
+                        val configRepository = ConfigurationRepository(sharedPreference)
+
+                        val customerInfoRepository = MasCustomerInfoRepository(MasaryRestServiceFactory(BuildConfig.BASE_URL).service, configRepository)
                         val login = LoginService(customerInfoRepository)
-                        val customerInfo = CustomerInfo(0, 1, 755622, 0, 755622, 8, 2,
+                        val customerInfo = CustomerInfo(0, 1, 755424, 0, 755424, 8, 2,
                                 "Y", "F", "01004605609", "Michael Jacoub", "مايكل يعقوب",
                                 "N", "no", "دلوقتي اتصالات عملت اقوي شحنه في مصر من 5 لـ 25 جنيه تشحنها زي ما تحب رصيد، أو دقايق لكل الشبكات، أو ميكس لكل الشبكات (انترنت - دقايق - رسائل)")
 
@@ -59,8 +73,10 @@ class LoginServiceTest(private val setupTestParameter: SetupTestParameter<*>) {
                             }
                         }
                     }
+
                     override fun toString() = CustomerInfo::class.java.simpleName!!
                 }))
+
         override fun toString() = CustomerInfo::class.java.simpleName!!
     }
 

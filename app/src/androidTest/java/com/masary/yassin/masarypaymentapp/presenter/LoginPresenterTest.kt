@@ -1,16 +1,20 @@
 package com.masary.yassin.masarypaymentapp.presenter
 
-import com.masary.yassin.masarypaymentapp.MOCK_BASE_URL
-import com.masary.yassin.masarypaymentapp.PASS
-import com.masary.yassin.masarypaymentapp.USER_NAME
-import com.masary.yassin.masarypaymentapp.USER_NAME_FAULT
-import com.masary.yassin.masarypaymentapp.infrastructure.*
+import android.content.Context
+import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.masary.yassin.masarypaymentapp.*
+import com.masary.yassin.masarypaymentapp.infrastructure.ConfigurationRepository
+import com.masary.yassin.masarypaymentapp.infrastructure.MasCustomerInfoRepository
+import com.masary.yassin.masarypaymentapp.infrastructure.MasaryRestServiceFactory
+import com.masary.yassin.masarypaymentapp.models.Configuration
 import com.masary.yassin.masarypaymentapp.models.CustomerInfo
 import com.masary.yassin.masarypaymentapp.models.User
 import com.masary.yassin.masarypaymentapp.models.exception.UnauthorizedException
 import com.masary.yassin.masarypaymentapp.models.services.LoginService
 import com.masary.yassin.masarypaymentapp.ui.merchantlogin.LoginContract
 import com.masary.yassin.masarypaymentapp.ui.merchantlogin.LoginPresenter
+import com.masary.yassin.masarypaymentapp.ui.util.SchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
@@ -19,6 +23,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
+import org.robolectric.RuntimeEnvironment
 import java.util.concurrent.TimeUnit
 
 /**
@@ -31,13 +36,22 @@ class LoginPresenterTest(private val setupTestParameter: SetupTestParameter) {
         @Parameterized.Parameters(name = "{index}: {0}")
         fun data(): List<Array<*>> = listOf(arrayOf(object : SetupTestParameter {
             override fun setup(): TestParameter<User> {
+
+                val sharedPreference: SharedPreferences = RuntimeEnvironment.application.getSharedPreferences(BuildConfig.KEY_PREFERENCE, Context.MODE_PRIVATE)
+
+                val config = Configuration("", "58240051111110", "Android%2D%2D89014103211118510720", "Mobiwire")
+                val jsonString = Gson().toJson(config)
+                sharedPreference.edit().clear().apply()
+                sharedPreference.edit().putString(BuildConfig.KEY_CONFIG, jsonString).apply()
+                val configRepository = ConfigurationRepository(sharedPreference)
+
                 val mockView = Mockito.mock(LoginContract.View::class.java)
-                val masCustomerInfoRepository = MasCustomerInfoRepository(MasaryRestServiceFactory(MOCK_BASE_URL).service)
+                val masCustomerInfoRepository = MasCustomerInfoRepository(MasaryRestServiceFactory(BuildConfig.BASE_URL).service, configRepository)
                 val loginService = LoginService(masCustomerInfoRepository)
-                val loginPresenter = LoginPresenter(loginService)
+                val loginPresenter = LoginPresenter(loginService, SchedulerProvider)
                 loginPresenter.setView(mockView)
 
-                val customerInfo = CustomerInfo(0, 1, 755771, 0, 755771, 8, 2,
+                val customerInfo = CustomerInfo(0, 1, 755424, 0, 755424, 8, 2,
                         "Y", "F", "01004605609", "Michael Jacoub", "مايكل يعقوب",
                         "N", "no", "دلوقتي اتصالات عملت اقوي شحنه في مصر من 5 لـ 25 جنيه تشحنها زي ما تحب رصيد، أو دقايق لكل الشبكات، أو ميكس لكل الشبكات (انترنت - دقايق - رسائل)")
 
@@ -81,7 +95,7 @@ class LoginPresenterTest(private val setupTestParameter: SetupTestParameter) {
         val testObserver = TestObserver<Any>()
         Observable.fromIterable(testParameter.getInCorrectUsers()
                 .map {
-                    val triple = testParameter.loginWithCorrectCredentialsTestCase(it)
+                    testParameter.loginWithCorrectCredentialsTestCase(it)
                 })
                 .subscribeOn(Schedulers.io())
                 .subscribe(testObserver)
@@ -98,7 +112,7 @@ class LoginPresenterTest(private val setupTestParameter: SetupTestParameter) {
         val testObserver = TestObserver<Any>()
         Observable.fromIterable(testParameter.getInCorrectUsers()
                 .map {
-                    val triple = testParameter.loginWithICorrectCredentialsTestCase(it)
+                    testParameter.loginWithICorrectCredentialsTestCase(it)
                 })
                 .subscribeOn(Schedulers.io())
                 .subscribe(testObserver)

@@ -4,22 +4,27 @@ import com.masary.yassin.masarypaymentapp.models.CustomerInfo
 import com.masary.yassin.masarypaymentapp.models.PostRepository
 import com.masary.yassin.masarypaymentapp.models.User
 import io.reactivex.Observable
+import retrofit2.HttpException
 
 /**
  *Created by yassin on 7/29/18.
  */
-//FIXME : We need remove this config fields from infrastructure layer and put in common config class generated from gradle script for security.
-private const val MACHINE_CONFIGURATIN = "@@ip_address=@@machine_id=358240051111110@@imsi=Android%2D%2D89014103211118510720@@device_type=Mobiwire@@sw_version=92@@browser=172.16.10.180%2FMobile%2DWS%2DClient@@platform=Android@@"
-private const val URL_PORT = "49"
 
-class MasCustomerInfoRepository(private val masaryRestService: MasaryRestService) : PostRepository<User, CustomerInfo> {
+class MasCustomerInfoRepository(private val masaryRestService: MasaryRestService,private val configurationRepository: ConfigurationRepository) : PostRepository<User, CustomerInfo> {
     override fun insert(entity: User): Observable<out CustomerInfo> {
-        return masaryRestService.login(URL_PORT, entity.username, entity.password, MACHINE_CONFIGURATIN)
+    return configurationRepository.get(11).flatMap {
+        configuration ->
+        masaryRestService.login(userName =  entity.username,password =  entity.password,machineConfing =  configuration.machineConfiguration())
                 .map {
                     it.custInfo[0].toCustomerInfo()
+                } .onErrorResumeNext { e: Throwable ->
+                    if (e is HttpException && e.response().code() == 404) {
+                        Observable.empty()
+                    } else {
+                        // FIXME: We need to Handle Masary errors.
+                        Observable.error(InfrastructureException(e))
+                    }
                 }
-                .onErrorResumeNext { e: Throwable ->
-                    Observable.error(InfrastructureException(e))//FIXME : We need know and handle masary Backend Exception.
-                }
+    }
     }
 }

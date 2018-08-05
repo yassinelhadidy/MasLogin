@@ -1,13 +1,11 @@
 package com.masary.yassin.masarypaymentapp.ui.merchantlogin
 
 import android.app.ProgressDialog
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import cn.pedant.SweetAlert.SweetAlertDialog
 import com.masary.yassin.masarypaymentapp.R
 import com.masary.yassin.masarypaymentapp.infrastructure.MasCustomerInfoRepository
 import com.masary.yassin.masarypaymentapp.models.services.LoginService
@@ -15,10 +13,12 @@ import com.masary.yassin.masarypaymentapp.ui.app.MasaryApp
 import com.masary.yassin.masarypaymentapp.ui.exception.ErrorMessageFactory
 import com.masary.yassin.masarypaymentapp.ui.helpers.Helper.Companion.isThereInternetConnection
 import com.masary.yassin.masarypaymentapp.ui.helpers.Helper.Companion.showSnackBar
+import com.masary.yassin.masarypaymentapp.ui.util.SchedulerProvider
 
 open class LoginActivity : AppCompatActivity(), LoginContract.View {
     //FIXME: We need to use Injection Factory.
     private lateinit var loginPresenter: LoginContract.Presenter
+    //FIXME: I use this dialog temporary however is deprecated due to sweetDialog currently bug https://github.com/pedant/sweet-alert-dialog.
     private lateinit var progressDialog: ProgressDialog
     private lateinit var loginConstraint: View
 
@@ -81,8 +81,9 @@ open class LoginActivity : AppCompatActivity(), LoginContract.View {
 
     private fun initPresenter() {
         //FIXME: Create instance of presenter
+        val configurationRepository = (applicationContext as MasaryApp).getConfigRepoInstance()
         val masaryRestService = (applicationContext as MasaryApp).getServiceInstance()
-        val masCustomerInfoRepository = MasCustomerInfoRepository(masaryRestService)
-        loginPresenter = LoginPresenter(LoginService(masCustomerInfoRepository))
+        val masCustomerInfoRepository = MasCustomerInfoRepository(masaryRestService, configurationRepository)
+        loginPresenter = LoginPresenter(LoginService(masCustomerInfoRepository), SchedulerProvider)
     }
 }

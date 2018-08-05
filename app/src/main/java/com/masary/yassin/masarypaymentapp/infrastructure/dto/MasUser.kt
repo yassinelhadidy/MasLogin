@@ -11,14 +11,14 @@ data class MasUser(val name: String,
                    val password: String?,
                    val deviceType: String) {
     companion object {
-        fun User.toSgUser(): MasUser = MasUser(name,
+        fun User.toMasUser(): MasUser = MasUser(name,
                 username,
-                password,deviceType)
+                password, deviceType)
     }
 
     fun toUser(): User {
         return User(name,
                 username,
-                password,deviceType)
+                password, deviceType)
     }
 }

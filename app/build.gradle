@@ -13,6 +13,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "MWS_VERSION", "PUT_HERE")
+        buildConfigField("String", "IP_ADD", "PUT_HERE")
+        buildConfigField("String", "BASE_URL", "PUT_HERE")
+        buildConfigField("String", "PLATFORM", "PUT_HERE")
+        buildConfigField("String", "LOGIN_MWS_GATE", "PUT_HERE")
+        buildConfigField("String", "KEY_CONFIG", "PUT_HERE")
+        buildConfigField("String", "KEY_PREFERENCE", "PUT_HERE")
     }
     buildTypes {
         release {

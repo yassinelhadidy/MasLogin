@@ -13,4 +13,5 @@
     <string name="exception_message_generic">خطا في السيستم</string>
     <string name="empty_login_fields">برجاء ادخال كلا من كود التاجر و كلمة السر</string>
     <string name="exception_message_no_connection">تاكد من اتصال الانترنت</string>
+    <string name="title_failure">خطأ</string>
 </resources>

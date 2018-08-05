@@ -1,9 +1,10 @@
 package com.masary.yassin.masarypaymentapp.infrastructure
 
-import com.masary.yassin.masarypaymentapp.MOCK_BASE_URL
-import com.masary.yassin.masarypaymentapp.PASS
-import com.masary.yassin.masarypaymentapp.USER_NAME
-import com.masary.yassin.masarypaymentapp.USER_NAME_FAULT
+import android.content.Context
+import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.masary.yassin.masarypaymentapp.*
+import com.masary.yassin.masarypaymentapp.models.Configuration
 import com.masary.yassin.masarypaymentapp.models.CustomerInfo
 import com.masary.yassin.masarypaymentapp.models.User
 import io.reactivex.Notification
@@ -14,6 +15,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
+import org.robolectric.RuntimeEnvironment
 import java.util.concurrent.TimeUnit
 
 /**
@@ -28,11 +30,18 @@ class PostRepositoryTest(private val setupTestParameter: SetupTestParameter<*>) 
         @Parameterized.Parameters(name = "{index}: {0}")
         fun data(): List<Array<*>> = listOf(arrayOf(object : SetupTestParameter<CustomerInfo> {
             override fun setup(): TestParameter<CustomerInfo> {
-                val customerInfo = CustomerInfo(0, 1, 755771, 0, 755771, 8, 2,
+                val customerInfo = CustomerInfo(0, 1, 755424, 0, 755424, 8, 2,
                         "Y", "F", "01004605609", "Michael Jacoub", "مايكل يعقوب",
                         "N", "no", "دلوقتي اتصالات عملت اقوي شحنه في مصر من 5 لـ 25 جنيه تشحنها زي ما تحب رصيد، أو دقايق لكل الشبكات، أو ميكس لكل الشبكات (انترنت - دقايق - رسائل)")
+                val sharedPreference: SharedPreferences = RuntimeEnvironment.application.getSharedPreferences(BuildConfig.KEY_PREFERENCE, Context.MODE_PRIVATE)
 
-                val customerInfoRepository = MasCustomerInfoRepository(MasaryRestServiceFactory(MOCK_BASE_URL).service)
+                val config = Configuration("", "58240051111110", "Android%2D%2D89014103211118510720", "Mobiwire")
+                val jsonString = Gson().toJson(config)
+                sharedPreference.edit().clear().apply()
+                sharedPreference.edit().putString(BuildConfig.KEY_CONFIG, jsonString).apply()
+                val configRepository = ConfigurationRepository(sharedPreference)
+
+                val customerInfoRepository = MasCustomerInfoRepository(MasaryRestServiceFactory(BuildConfig.BASE_URL).service, configRepository)
                 val validUserMap = hashMapOf(
                         User("مايكل يعقوب", "87", "123456789", "mobiwire") to customerInfo
                 )
@@ -46,15 +55,15 @@ class PostRepositoryTest(private val setupTestParameter: SetupTestParameter<*>) 
                     override fun getCorrectDataForInsertion(): Set<User> = validUserMap.keys
 
                     override fun successfulInsertionTransaction(user: User): Triple<Observable<out CustomerInfo>, User, CustomerInfo?> {
-                        val  observable = customerInfoRepository.insert(User("", USER_NAME, PASS, "mobiwire"))
-                        return Triple(observable,user,validUserMap[user])
+                        val observable = customerInfoRepository.insert(User("", USER_NAME, PASS, "mobiwire"))
+                        return Triple(observable, user, validUserMap[user])
                     }
 
                     override fun getInCorrectDataForInsertion(): Set<User> = inValidUserMap.keys
 
                     override fun failureInsertionTransaction(user: User): Triple<Observable<out CustomerInfo>, User, Throwable?> {
-                      val  observable = customerInfoRepository.insert(User("", USER_NAME_FAULT, PASS, "mobiwire"))
-                        return Triple(observable,user,inValidUserMap[user])
+                        val observable = customerInfoRepository.insert(User("", USER_NAME_FAULT, PASS, "mobiwire"))
+                        return Triple(observable, user, inValidUserMap[user])
                     }
 
                     override fun checkInsert() {

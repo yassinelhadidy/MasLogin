@@ -7,6 +7,7 @@ import com.masary.yassin.masarypaymentapp.models.services.LoginService
 import com.masary.yassin.masarypaymentapp.ui.merchantlogin.LoginActivity
 import com.masary.yassin.masarypaymentapp.ui.merchantlogin.LoginPresenter
 import com.nhaarman.mockito_kotlin.*
+import com.masary.yassin.masarypaymentapp.ui.util.ImmediateSchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
@@ -30,7 +31,7 @@ class LoginPresenterUnitTest(private val setupTestParameter: SetupTestParameter)
             override fun setup(): TestParameter<User> {
                 val mockLoginService = mock<LoginService>()
                 val mockView = mock<LoginActivity>()
-                val loginPresenter = LoginPresenter(mockLoginService)
+                val loginPresenter = LoginPresenter(mockLoginService, ImmediateSchedulerProvider)
                 loginPresenter.setView(mockView)
                 val customerInfo = CustomerInfo(0, 1, 755771, 0, 755771, 8, 2,
                         "Y", "F", "01004605609", "Michael Jacoub", "مايكل يعقوب",
@@ -54,9 +55,9 @@ class LoginPresenterUnitTest(private val setupTestParameter: SetupTestParameter)
                                 .thenReturn(Observable.just(customerInfo))
 
                         loginPresenter.login(user.username!!, user.password!!, user.deviceType)
-                        verify(mockView, only()).showLoading()
-                        verify(mockView, only()).hideLoading()
-                        verify(mockView, only()).showValid(eq(1))
+                        verify(mockView).showLoading()
+                        verify(mockView).hideLoading()
+                        verify(mockView).showValid(eq(1))
                     }
 
                     override fun getInCorrectUsers(): Set<User> = inValidUserMap.keys
@@ -65,8 +66,9 @@ class LoginPresenterUnitTest(private val setupTestParameter: SetupTestParameter)
                         whenever(mockLoginService.login(user.username!!, user.password!!, user.deviceType))
                                 .thenReturn(Observable.error { inValidUserMap[user] })
                         loginPresenter.login(user.username!!, user.password!!, user.deviceType)
-                        verify(mockView).showLoading()
-                        verify(mockView).hideLoading()
+
+                        verify(mockView, atLeast(1)).showLoading()
+                        verify(mockView, atLeast(1)).hideLoading()
                         verify(mockView).showError(inValidUserMap[user] as Throwable)
                     }
                 }
@@ -76,17 +78,11 @@ class LoginPresenterUnitTest(private val setupTestParameter: SetupTestParameter)
 
     @Test
     fun testloginWithCorrectCredentialsTestCase() {
-//        val testParameter = setupTestParameter.setup()
-//        val users= testParameter.getCorrectUsers()
-//        users.forEach {
-//            testParameter.loginWithCorrectCredentialsTestCase(it)
-//        }
-
         val testParameter = setupTestParameter.setup()
         val testObserver = TestObserver<Any>()
         Observable.fromIterable(testParameter.getCorrectUsers()
                 .map {
-                    val triple = testParameter.loginWithCorrectCredentialsTestCase(it)
+                    testParameter.loginWithCorrectCredentialsTestCase(it)
                 })
                 .subscribeOn(Schedulers.io())
                 .subscribe(testObserver)
@@ -98,15 +94,12 @@ class LoginPresenterUnitTest(private val setupTestParameter: SetupTestParameter)
     }
 
     @Test
-    fun testloginWithICorrectCredentialsTestCase() {
-//        val testParameter = setupTestParameter.setup()
-//        testParameter.duplicatedScannedBarcodeAndFoundInSheet()
-
+    fun testloginWithInCorrectCredentialsTestCase() {
         val testParameter = setupTestParameter.setup()
         val testObserver = TestObserver<Any>()
         Observable.fromIterable(testParameter.getInCorrectUsers()
                 .map {
-                    val triple = testParameter.loginWithICorrectCredentialsTestCase(it)
+                    testParameter.loginWithICorrectCredentialsTestCase(it)
                 })
                 .subscribeOn(Schedulers.io())
                 .subscribe(testObserver)
