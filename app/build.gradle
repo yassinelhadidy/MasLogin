@@ -5,11 +5,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.masary.yassin.masarypaymentapp"
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -39,9 +39,12 @@ android {
 
 dependencies { configuration ->
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    //noinspection GradleCompatible
     implementation 'com.android.support:design:27.1.1'
+    //noinspection GradleCompatible
     implementation 'com.android.support:support-v4:27.1.1'
     kotlinConfig(configuration, kotlin_version)
     gsonLib(configuration)
