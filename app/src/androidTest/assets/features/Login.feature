@@ -13,6 +13,6 @@ Scenario Outline: Unsuccessfull merchant login to the App
 
  Examples:
    |invalid credentials      |error message                                            |
-   |wrong credentials        |برجاء التأكد من كود التاجر او كلمة السر و اعادة المحاولة|
+   |wrong credentials        | برجاء التأكد من كود التاجر او كلمة السر و اعادة المحاولة|
    |missing credentials      |                برجاء ادخال كلا من كود التاجر  و كلمة السر|
    |inactive user credentials|     هذا المستخدم غير مفعل برجاء الرجوع الي الجهة المعنية|
