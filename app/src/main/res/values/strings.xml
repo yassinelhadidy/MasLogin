@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MasaryPaymentApp</string>
     //LoginScreen Messages
-    <string name="exception_message_user_not_found">برجاء التأكد من كود المندوب او كلمة السر و اعادة المحاولة</string>
+    <string name="exception_message_user_not_found">برجاء التأكد من كود التاجر او كلمة السر و اعادة المحاولة</string>
     <string name="exception_message_user_inactive">هذا المستخدم غير مفعل برجاء الرجوع الي الجهة المعنية</string>
     <string name="save_entrance">تسجيل الدخول</string>
     <string name="welcome_title">مرحبا بك برجاء ادخال بياناتك لتسجيل الدخول</string>

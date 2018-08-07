@@ -6,13 +6,13 @@ Scenario: Merchant login in with successful credentials
  When He inserts his credentials successfully
  Then He will be logged to the app successfully
 
-Scenario Outline: Unsuccessfull runner login to the App
+Scenario Outline: Unsuccessfull merchant login to the App
  Given Merchant at the login page
  When Merchant login in using <invalid credentials>
  Then This <error message> is displayed
 
  Examples:
    |invalid credentials      |error message                                            |
-   |wrong credentials        |برجاء التأكد من كود المندوب او كلمة السر و اعادة المحاولة|
+   |wrong credentials        |برجاء التأكد من كود التاجر او كلمة السر و اعادة المحاولة|
    |missing credentials      |                برجاء ادخال كلا من كود التاجر  و كلمة السر|
    |inactive user credentials|     هذا المستخدم غير مفعل برجاء الرجوع الي الجهة المعنية|

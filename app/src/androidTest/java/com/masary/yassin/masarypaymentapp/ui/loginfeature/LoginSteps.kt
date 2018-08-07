@@ -42,7 +42,7 @@ class LoginSteps {
 
     @Given("^Merchant at the login page$")
     @Throws(Throwable::class)
-    fun runnerAtLoginPage() {
+    fun MerchantAtLoginPage() {
         assertNotNull(activity)
     }
 
@@ -59,9 +59,9 @@ class LoginSteps {
     @Then("^He will be logged to the app successfully$")
     @Throws(Throwable::class)
     fun loggedSuccessfully() {
-//        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("لديك شيت اليوم")))
+//        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("")))
 //                .check(matches(isDisplayed()))
-//        Intents.intended(IntentMatchers.hasComponent(ComponentName(InstrumentationRegistry.getTargetContext(), NoCurrentSheetActivity::class.java)))
+//        Intents.intended(IntentMatchers.hasComponent(ComponentName(InstrumentationRegistry.getTargetContext(), MainMenu::class.java)))
 
     }
 
@@ -76,7 +76,6 @@ class LoginSteps {
                 closeSoftKeyboard()
                 onView(withText("دخول")).perform(click())
             }
-
             "missing credentials" -> {
                 onView(withHint("اسم المستخدم")).perform(typeText(""))
                 closeSoftKeyboard()
