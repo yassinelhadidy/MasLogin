@@ -56,19 +56,19 @@ class LoginPresenterTest(private val setupTestParameter: SetupTestParameter) {
                         "N", "no", "دلوقتي اتصالات عملت اقوي شحنه في مصر من 5 لـ 25 جنيه تشحنها زي ما تحب رصيد، أو دقايق لكل الشبكات، أو ميكس لكل الشبكات (انترنت - دقايق - رسائل)")
 
                 val validUserMap = hashMapOf(
-                        User("مايكل يعقوب", USER_NAME, PASS, "mobiwire") to customerInfo
+                        User("مايكل يعقوب", USER_NAME, PASS) to customerInfo
                 )
 
                 val inValidUserMap = hashMapOf(
-                        User("مينا", "885", "123456789", "android") to UnauthorizedException("Invalid User ID or Password"),
-                        User("مينا", USER_NAME_FAULT, PASS, "android") to UnauthorizedException("In-Active Customer")
+                        User("مينا", "885", "123456789") to UnauthorizedException("Invalid User ID or Password"),
+                        User("مينا", USER_NAME_FAULT, PASS) to UnauthorizedException("In-Active Customer")
                 )
 
                 return object : TestParameter<User> {
                     override fun getCorrectUsers(): Set<User> = validUserMap.keys
 
                     override fun loginWithCorrectCredentialsTestCase(user: User) {
-                        loginPresenter.login(user.username!!, user.password!!, user.deviceType)
+                        loginPresenter.login(user.username!!, user.password!!)
                         Mockito.verify(mockView).showLoading()
                         Mockito.verify(mockView).hideLoading()
                         Mockito.verify(mockView).showValid(ArgumentMatchers.eq(1))
@@ -77,7 +77,7 @@ class LoginPresenterTest(private val setupTestParameter: SetupTestParameter) {
                     override fun getInCorrectUsers(): Set<User> = inValidUserMap.keys
 
                     override fun loginWithICorrectCredentialsTestCase(user: User) {
-                        loginPresenter.login(user.username!!, user.password!!, user.deviceType)
+                        loginPresenter.login(user.username!!, user.password!!)
                         Mockito.verify(mockView).showLoading()
                         Mockito.verify(mockView).hideLoading()
                         Mockito.verify(mockView).showError(inValidUserMap[user] as Throwable)

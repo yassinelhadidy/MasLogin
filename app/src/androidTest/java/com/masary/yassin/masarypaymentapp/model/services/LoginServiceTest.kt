@@ -50,25 +50,25 @@ class LoginServiceTest(private val setupTestParameter: SetupTestParameter<*>) {
                                 "N", "no", "دلوقتي اتصالات عملت اقوي شحنه في مصر من 5 لـ 25 جنيه تشحنها زي ما تحب رصيد، أو دقايق لكل الشبكات، أو ميكس لكل الشبكات (انترنت - دقايق - رسائل)")
 
                         val validUserMap = hashMapOf(
-                                User("مايكل يعقوب", "8", "123456789", "mobiwire") to customerInfo
+                                User("مايكل يعقوب", "8", "123456789") to customerInfo
                         )
 
                         val inValidUserMap = hashMapOf(
-                                User("مينا", "88", "123456789", "android") to UnauthorizedException("[Invalid Credentials]")
+                                User("مينا", "88", "123456789") to UnauthorizedException("[Invalid Credentials]")
                         )
 
                         return object : TestParameter<CustomerInfo> {
                             override fun getCorrectUsers(): Set<User> = validUserMap.keys
 
                             override fun successfulLogin(user: User): Triple<Observable<out CustomerInfo>, User, CustomerInfo?> {
-                                val observable = login.login(user.username!!, user.password!!, user.deviceType)
+                                val observable = login.login(user.username!!, user.password!!)
                                 return Triple(observable, user, validUserMap[user])
                             }
 
                             override fun getInCorrectUsers(): Set<User> = inValidUserMap.keys
 
                             override fun loginUnauthorizedUser(user: User): Triple<Observable<out CustomerInfo>, User, Throwable?> {
-                                val observable = login.login(user.username!!, user.password!!, user.deviceType)
+                                val observable = login.login(user.username!!, user.password!!)
                                 return Triple(observable, user, inValidUserMap[user])
                             }
                         }

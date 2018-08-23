@@ -16,6 +16,6 @@ interface LoginContract {
     }
 
     interface Presenter : BasePresenter<View> {
-        fun login(username: String, password: String, device: String)
+        fun login(username: String, password: String)
     }
 }

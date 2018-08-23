@@ -43,12 +43,12 @@ class LoginServiceUnitTest(private val setupTestParameter: SetupTestParameter<*>
 
 
                 val validUserMap = hashMapOf(
-                        User("", "8", "123456789", "mobiwire") to customerInfo
+                        User("", "8", "123456789") to customerInfo
                 )
 
                 val inValidUserMap = hashMapOf(
-                        User("", "885", "123456789", "android") to UnauthorizedException("Invalid User ID or Password"),
-                        User("", "88", "123456789", "android") to UnauthorizedException("In-Active Customer")
+                        User("", "885", "123456789") to UnauthorizedException("Invalid User ID or Password"),
+                        User("", "88", "123456789") to UnauthorizedException("In-Active Customer")
                 )
 
                 return object : TestParameter<CustomerInfo> {
@@ -60,7 +60,7 @@ class LoginServiceUnitTest(private val setupTestParameter: SetupTestParameter<*>
                         val login = LoginService(mockMasCustomerInfoRepository)
 
 
-                        val observable = login.login(user.username!!, user.password!!, user.deviceType)
+                        val observable = login.login(user.username!!, user.password!!)
                         return Triple(observable, user, validUserMap[user])
                     }
 
@@ -74,7 +74,7 @@ class LoginServiceUnitTest(private val setupTestParameter: SetupTestParameter<*>
                                 .thenReturn(Observable.error(HttpException(errorResponse)))
                         val login = LoginService(mockMasCustomerInfoRepository)
 
-                        val observable = login.login(user.username!!, user.password!!, user.deviceType)
+                        val observable = login.login(user.username!!, user.password!!)
                         return Triple(observable, user, inValidUserMap[user])
                     }
                 }

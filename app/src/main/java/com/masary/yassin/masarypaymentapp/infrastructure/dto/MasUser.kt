@@ -8,17 +8,16 @@ import com.masary.yassin.masarypaymentapp.models.User
  */
 data class MasUser(val name: String,
                    val username: String?,
-                   val password: String?,
-                   val deviceType: String) {
+                   val password: String?) {
     companion object {
         fun User.toMasUser(): MasUser = MasUser(name,
                 username,
-                password, deviceType)
+                password)
     }
 
     fun toUser(): User {
         return User(name,
                 username,
-                password, deviceType)
+                password)
     }
 }

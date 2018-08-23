@@ -39,22 +39,22 @@ class LoginPresenterUnitTest(private val setupTestParameter: SetupTestParameter)
 
 
                 val validUserMap = hashMapOf(
-                        User("مايكل يعقوب", "8", "123456789", "mobiwire") to customerInfo
+                        User("مايكل يعقوب", "8", "123456789") to customerInfo
                 )
 
                 val inValidUserMap = hashMapOf(
-                        User("مينا", "885", "123456789", "android") to UnauthorizedException("Invalid User ID or Password"),
-                        User("مينا", "88", "123456789", "android") to UnauthorizedException("In-Active Customer")
+                        User("مينا", "885", "123456789") to UnauthorizedException("Invalid User ID or Password"),
+                        User("مينا", "88", "123456789") to UnauthorizedException("In-Active Customer")
                 )
 
                 return object : TestParameter<User> {
                     override fun getCorrectUsers(): Set<User> = validUserMap.keys
 
                     override fun loginWithCorrectCredentialsTestCase(user: User) {
-                        whenever(mockLoginService.login(user.username!!, user.password!!, user.deviceType))
+                        whenever(mockLoginService.login(user.username!!, user.password!!))
                                 .thenReturn(Observable.just(customerInfo))
 
-                        loginPresenter.login(user.username!!, user.password!!, user.deviceType)
+                        loginPresenter.login(user.username!!, user.password!!)
                         verify(mockView).showLoading()
                         verify(mockView).hideLoading()
                         verify(mockView).showValid(eq(1))
@@ -63,9 +63,9 @@ class LoginPresenterUnitTest(private val setupTestParameter: SetupTestParameter)
                     override fun getInCorrectUsers(): Set<User> = inValidUserMap.keys
 
                     override fun loginWithICorrectCredentialsTestCase(user: User) {
-                        whenever(mockLoginService.login(user.username!!, user.password!!, user.deviceType))
+                        whenever(mockLoginService.login(user.username!!, user.password!!))
                                 .thenReturn(Observable.error { inValidUserMap[user] })
-                        loginPresenter.login(user.username!!, user.password!!, user.deviceType)
+                        loginPresenter.login(user.username!!, user.password!!)
 
                         verify(mockView, atLeast(1)).showLoading()
                         verify(mockView, atLeast(1)).hideLoading()

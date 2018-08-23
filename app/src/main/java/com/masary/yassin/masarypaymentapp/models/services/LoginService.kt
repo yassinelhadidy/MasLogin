@@ -9,8 +9,8 @@ import io.reactivex.Observable
 import retrofit2.HttpException
 
 class LoginService(private val masCustomerInfoRepository: MasCustomerInfoRepository) {
-    fun login(username: String, password: String, device: String): Observable<out CustomerInfo> {
-        return masCustomerInfoRepository.insert(User("", username, password, device))
+    fun login(username: String, password: String): Observable<out CustomerInfo> {
+        return masCustomerInfoRepository.insert(User("", username, password))
                 .map { it }
                 .onErrorResumeNext { e: Throwable ->
                     if (e is HttpException && e.code() == 200) {
