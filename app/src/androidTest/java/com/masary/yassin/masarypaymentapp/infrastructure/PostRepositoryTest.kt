@@ -43,26 +43,26 @@ class PostRepositoryTest(private val setupTestParameter: SetupTestParameter<*>) 
 
                 val customerInfoRepository = MasCustomerInfoRepository(MasaryRestServiceFactory(BuildConfig.BASE_URL).service, configRepository)
                 val validUserMap = hashMapOf(
-                        User("مايكل يعقوب", "87", "123456789", "mobiwire") to customerInfo
+                        User("مايكل يعقوب", "87", "123456789") to customerInfo
                 )
 
                 val inValidUserMap = hashMapOf(
-                        User("مينا", "885", "123456789", "android") to InfrastructureException("Invalid User ID or Password"),
-                        User("مينا", "88", "123456789", "android") to InfrastructureException("In-Active Customer")
+                        User("مينا", "885", "123456789") to InfrastructureException("Invalid User ID or Password"),
+                        User("مينا", "88", "123456789") to InfrastructureException("In-Active Customer")
                 )
 
                 return object : TestParameter<CustomerInfo> {
                     override fun getCorrectDataForInsertion(): Set<User> = validUserMap.keys
 
                     override fun successfulInsertionTransaction(user: User): Triple<Observable<out CustomerInfo>, User, CustomerInfo?> {
-                        val observable = customerInfoRepository.insert(User("", USER_NAME, PASS, "mobiwire"))
+                        val observable = customerInfoRepository.insert(User("", USER_NAME, PASS))
                         return Triple(observable, user, validUserMap[user])
                     }
 
                     override fun getInCorrectDataForInsertion(): Set<User> = inValidUserMap.keys
 
                     override fun failureInsertionTransaction(user: User): Triple<Observable<out CustomerInfo>, User, Throwable?> {
-                        val observable = customerInfoRepository.insert(User("", USER_NAME_FAULT, PASS, "mobiwire"))
+                        val observable = customerInfoRepository.insert(User("", USER_NAME_FAULT, PASS))
                         return Triple(observable, user, inValidUserMap[user])
                     }
 

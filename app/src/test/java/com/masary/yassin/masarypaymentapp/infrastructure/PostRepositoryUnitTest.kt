@@ -57,12 +57,12 @@ class PostRepositoryUnitTest(private val setupTestParameter: SetupTestParameter<
                         val configRepository = ConfigurationRepository(sharedPreference)
 
                         val validUserMap = hashMapOf(
-                                User("مايكل يعقوب", userName, pass, "mobiwire") to customerInfo
+                                User("مايكل يعقوب", userName, pass) to customerInfo
                         )
 
                         val inValidUserMap = hashMapOf(
-                                User("مينا", "885", "123456789", "android") to InfrastructureException("Invalid User ID or Password"),
-                                User("مينا", "88", "123456789", "android") to InfrastructureException("In-Active Customer")
+                                User("مينا", "885", "123456789") to InfrastructureException("Invalid User ID or Password"),
+                                User("مينا", "88", "123456789") to InfrastructureException("In-Active Customer")
                         )
 
                         return object : TestParameter<CustomerInfo> {

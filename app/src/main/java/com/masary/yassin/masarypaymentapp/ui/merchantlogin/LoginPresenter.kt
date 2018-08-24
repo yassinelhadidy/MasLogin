@@ -9,9 +9,9 @@ class LoginPresenter(private val loginService: LoginService, private val schedul
 
     private lateinit var view: LoginContract.View
 
-    override fun login(username: String, password: String, device: String) {
+    override fun login(username: String, password: String) {
         view.showLoading()
-        loginService.login(username, password, device)
+        loginService.login(username, password)
                 .subscribeOn(scheduleProvider.io())
                 .observeOn(scheduleProvider.ui())
                 .subscribe({

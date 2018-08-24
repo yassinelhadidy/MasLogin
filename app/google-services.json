@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "58669857144",
+    "firebase_url": "https://osprojects-ec438.firebaseio.com",
+    "project_id": "osprojects-ec438",
+    "storage_bucket": "osprojects-ec438.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58669857144:android:e75e331e5ac0b3b3",
+        "android_client_info": {
+          "package_name": "com.masary.yassin.masarypaymentapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58669857144-f0gl7smkc4mpovnpa6vs0c4n3fgfed06.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.masary.yassin.masarypaymentapp",
+            "certificate_hash": "8319fcd4bbee003c3d86d259fa11ce5d45b0f1bb"
+          }
+        },
+        {
+          "client_id": "58669857144-ch2ik6h7hak6bp8vpkm08o3ttca7v9h0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmUFKdxtacwEAFFPonUXjl5aTrs43LrU8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "58669857144-ch2ik6h7hak6bp8vpkm08o3ttca7v9h0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
